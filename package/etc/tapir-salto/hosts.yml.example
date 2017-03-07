@@ -1,0 +1,22 @@
+hosts:
+        - name: Node1
+          addr:
+              - 127.0.0.1
+              - 127.0.0.2
+
+        - name: Node2
+          addr:
+              - 127.0.1.1
+
+        - name: Node3
+          addr:
+              - 127.0.2.1
+
+        - name: Node4
+          addr:
+              - 127.0.3.1
+              - 127.0.3.2
+
+        - name: Node5
+          addr:
+              - 127.0.4.1

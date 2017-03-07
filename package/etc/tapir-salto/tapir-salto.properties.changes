@@ -1,0 +1,95 @@
+!!###################################################!!
+!!               Settings v.2.0.x                    !!
+!!###################################################!!
+
+udp.port = <port>
+       UDP port where Tapir Salto listen. Default <port> is 15060.
+
+disruptor.capacity = <number>
+        Size of buffer. Default is 4096.
+disruptor.consumers = <number>
+        Count of consumers to process data from buffer.
+        Default is 8
+
+ttl.cron = <string>
+        Schedule data cleansing in crontab(5) format.
+        A cron-like expression, extending the usual UN*X definition to include
+        triggers on the second as well as minute, hour, day of month, month
+        and day of week.  e.g. {@code "0 * * * * MON-FRI"} means once per minute on
+        weekdays (at the top of the minute - the 0th second).
+        Default is "0 0/30 * * * *"
+ttl.registers = <Milliseconds>
+        <duration> = <number>
+        Time to live REGISTER data in storage engine.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        Default is 15d.
+ttl.calls = <Milliseconds>
+        <duration> = <number>
+        Time to live CALL data in storage engine.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        Default is 30d.
+ttl.statistic = <duration><key>
+        <duration> = <number>
+        Time to live STATISTICS data in storage engine.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        Default is 15d.
+
+mongo.uri = <string>
+        URI connect string to storage engine.
+        Default <string> is "mongodb://127.0.0.1:27017/tapir"
+mongo.partition = <duration><key>
+        <duration> = <number>
+        Time interval to switch partitioning.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        Default is 1h.
+mongo.batchSize = <size>
+        Batch size of message records for processing.
+        Default value is 256
+
+redis.host = <ip address>
+        IP address or hostname of Redis server for store statistics.
+        Default is 127.0.0.1.
+redis.port = <port>
+        TCP port of Redis server.
+        Default is 6379.
+
+statistic.enabled = <string>
+        Enable/disable statistics functionality.
+        Default is "true".
+statistic.host = <string>
+        Comma separated host names from host.yaml which statistics will be count.
+statistic.partition = <duration><key>
+        <duration> = <number>
+        Time interval to create partitions of statistics.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        It should be consistent with the parameter statistic.partition in the Tapir Twig.
+        Default is 5m.
+statistic.inclusions = <string>
+        Comma separated list of response methods which will be include to statistic.
+statistic.exclusions = <string>
+        Comma separated list of response methods which will be exclude from statistic.
+
+hosts.yml = <filename>
+        Full path name of file where store hosts name.
+        There is YAML format.
+        E.g. /etc/tapir-salto/hosts.yml
+
+
+
+
+

@@ -1,0 +1,109 @@
+#!/bin/bash
+
+#/*
+# *    Copyright 2017 SIP3.IO CORP.
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+
+#
+# Script for multiply of application instance
+#
+# Version 1.0
+# Created by windsent (c) 2017
+#
+
+app_name="${PWD##*/}"
+application=$app_name
+
+
+instance=$2
+
+app_conf_dir="/etc/$app_name"
+app_init_script="/etc/init.d/$app_name-$instance"
+app_bin_dir="/opt/$app_name"
+template_dir="$app_conf_dir/template"
+
+function addInstance {
+   if [ -x $app_init_script ] ; then
+      RETVAL=1
+      echo "Error: instance $instance of $app_name already exists";
+      return 1
+   fi
+
+   echo "Script will create instance $instance of $app_name"
+
+   echo -n " Create Application properties file: /etc/$app_name/$app_name-$instance.properties"
+   sed "s/INSTANCE/$instance/g" $template_dir/$app_name.properties > $app_conf_dir/$app_name-$instance.properties
+   echo " - OK"
+
+   echo -n " Create Application logging configuration file: /etc/$app_name/logback-$instance.xml"
+   sed "s/INSTANCE/$instance/g" $template_dir/logback.xml > $app_conf_dir/logback-$instance.xml
+   echo " - OK"
+
+   echo -n " Create Application start file: /etc/init.d/$app_name-$instance"
+   ln -s /etc/init.d/$app_name /etc/init.d/$app_name-$instance
+   echo " - OK"
+
+   chkconfig --add $app_name-$instance
+
+   RETVAL=0
+   return 0
+}
+
+function deleteInstance {
+   if [ -a /var/run/$app_name-$instance ] ; then
+      RETVAL=1
+      echo "Error: Instnance $instance of $app_name is running. Please stop it before delete"
+      return 1
+   fi
+
+   echo "Script will remove instance $instance of $app_name"
+
+   rm -f /etc/$app_name/$app_name-$instance.properties
+   rm -f /etc/$app_name/logback-$instance.xml
+   rm -f /var/log/$app_name/stderrout-$instance.log
+   rm -f /var/log/$app_name/default-$instance.*
+   rm -f /etc/init.d/$app_name-$instance
+
+   echo "DONE"
+
+   RETVAL=0
+   return 0
+}
+
+function main {
+   RETVAL=0
+   case "$1" in
+      add)
+         # Add new instance
+         addInstance
+         ;;
+      delete)
+         # Delete instance
+         deleteInstance
+         ;;
+      *)
+         echo
+         echo "Application for manipulate instances of $app_name"
+         echo
+         echo "Usage: $0 {add|delete} INSTANCE"
+         echo "where INSTANCE := { 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 }"
+         RETVAL=1
+         ;;
+      esac
+
+   exit $RETVAL
+}
+
+main $1

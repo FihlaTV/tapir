@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>core</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <artifactId>tapir</artifactId>
+        <groupId>io.sip3.tapir</groupId>
+        <version>${tapir.version}</version>
+    </parent>
+
+    <properties>
+        <sip.version>1.2.317</sip.version>
+        <io.pkts.version>2.0.6-SNAPSHOT</io.pkts.version>
+        <junitparams.version>1.0.4</junitparams.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.sip</groupId>
+            <artifactId>jain-sip-ri</artifactId>
+            <version>${sip.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pkts</groupId>
+            <artifactId>pkts-core</artifactId>
+            <version>${io.pkts.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.pragmatists</groupId>
+            <artifactId>JUnitParams</artifactId>
+            <version>${junitparams.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

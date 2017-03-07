@@ -1,0 +1,55 @@
+!!###################################################!!
+!!               Settings v.1.0.0                    !!
+!!###################################################!!
+server.port = <port>
+       TCP port where Tapir Twig listen. Default <port> is 8080.
+
+mongo.uri = <uri>
+       URI connect string to storage engine.
+       Default <string> is "mongodb://127.0.0.1:27017/tapir"
+mongo.partition = <duration><key>
+        <duration> = <number>
+        Time interval to switch partitioning.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        Default is 1h.
+mongo.batchSize = <size>
+        Batch size of message records for processing.
+        Default value is 256
+
+redis.host = <ip address>
+        IP address or hostname of Redis server for store statistics.
+        Default is 127.0.0.1.
+redis.port = <port>
+        TCP port of Redis server.
+        Default is 6379.
+
+statistic.partition = <duration><key>
+        <duration> = <number>
+        Time interval to switch partitions of statistics.
+        <key> = <char>
+        m - minute partition
+        h - hour partition
+        d - day partition
+        It should be consistent with the parameter statistic.partition in the Tapir Salto.
+        It use for read.
+        Default is 5m.
+
+sip.att = <milliseconds>
+        Average transmission time.
+        This interval of time during which the search for the next leg.
+        Intended for tuning of chains search calls on several legs
+        Default is 500.
+sip.acd = <milliseconds>
+        Average call duration.
+        Time interval which will be added to search range for hit all sessions in the search request to all legs.
+        Usually, can choose equal to parameter average call duration.
+        Intended for tuning of chains search calls on several legs.
+        Default is 60000.
+sip.art = <milliseconds>
+        Time interval for exclude sessions which began before requested time.
+        This parameter for dividing sessions identical caller and callee in the same leg.
+        Intended for tuning of chains search calls on several legs.
+        Default is 5000.

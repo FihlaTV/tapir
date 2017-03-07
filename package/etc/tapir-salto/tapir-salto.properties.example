@@ -1,0 +1,30 @@
+#! UDP
+udp.port = 15060
+
+#! Mongo
+mongo.uri = mongodb://127.0.0.1:27017/tapir
+mongo.batchSize = 256
+mongo.partition = 1h
+
+#! Redis
+redis.host = 127.0.0.1
+redis.port = 6379
+
+#! Statistic
+statistic.enabled = false
+statistic.host = 127.0.0.1
+statistic.partition = 5m
+# statistic.inclusions = 408, 500, 503, 504
+# statistic.exclusions = 407, 480
+
+#! Cron
+ttl.cron = 0 0/30 * * * *
+ttl.calls = 30d
+ttl.registers = 15d
+ttl.statistic = 15d
+
+# hosts.yml = /etc/tapir-salto/hosts.yml
+
+#! Disruptor
+disruptor.capacity = 4096
+disruptor.consumers = 8

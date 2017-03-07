@@ -1,0 +1,50 @@
+!!###################################################!!
+!!               Settings v.2.0.x                    !!
+!!###################################################!!
+pcap.device = <interface>
+        Listen on <interface>.
+pcap.file = <file>
+        Read packets from <file>.
+pcap.directory = <directory>
+        Listening to a <directory> of new files appearing.
+        Gzip files are supported, file name should be ".gz" on the end.
+
+pcap.bpfFilter = <expression>
+        Selects which packets will be dumped.
+        If no <expression> is given, all packets on the net will
+        be dumped. Otherwise, only packets for which <expression>
+        is 'true' will be dumped. For the expression syntax,
+        see pcap-filter(7).
+        Default is 'tcp or udp'
+pcap.spanLength = <capture snaplen>
+        Set the default snapshot length to use when capturing
+        live data.  No more than snaplen bytes of each network packet
+        will be read. A value of 65535, so that the full packet is
+        captured; this is the default.
+pcap.timeoutMillis = <number>
+        Read timeout. Most OSs buffer packets.
+        The OSs pass the packets to Pcap4j after the buffer gets full
+        or the read timeout expires.
+        Must be non-negative. May be ignored by some OSs.
+        0 means disable buffering on Solaris.
+        0 means infinite on the other OSs.
+        1 through 9 means infinite on Solaris.
+
+packet.host = <host>
+        IP address or hostname Tapir Salto host. Default <host> is 127.0.0.1
+packet.port = <port>
+        UDP port where Tapir Salto listen. Default <port> is 15060.
+packet.delay = <milliseconds>
+        Delay timeout to send packet to Salto.
+        Useful when Captain process large files and Salto throughput is limited.
+        Default is 0.
+packet.ttl = <milliseconds>
+        Timeout to wait fragmented packets to collect correct SIP message.
+        Default is 60000.
+
+disruptor.capacity = <number>
+        Size of buffer. Default is 4096.
+disruptor.consumers = <number>
+        Count of consumers to process data from buffer.
+        Default is 2
+

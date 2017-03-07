@@ -1,0 +1,182 @@
+#!/bin/bash
+
+#/*
+# *    Copyright 2017 SIP3.IO CORP.
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+
+#
+# Script for install/update/remove or make rpm of application
+#
+# Version 1.6.0
+# Created by windsent (c) 2017
+#
+
+source_dir="${PWD%/*}"
+app_name="${0##*/}"
+user="${app_name%%-*}"
+app_dir="${0#*-}"
+remote_host="root@$2"
+version=$(awk 'BEGIN { FS = "<tapir.version>|</tapir.version>" } /<tapir.version>/ { print $2; exit }' ../pom.xml)
+
+checkForce=$*
+
+if [[ ! $checkForce =~ "force" ]]; then
+  if [[ $version =~ "SNAPSHOT" ]]; then
+    echo "Error: You must use only RELEASE build. Checkout it from Release branch version: ${version/SNAPSHOT/RELEASE}"
+    exit 1
+  fi
+
+  if [[ ! -a ../$app_dir/target/$app_name.jar ]]; then
+    echo "Error: File $app_name.jar not found."
+    echo "You should make project:"
+    echo "# cd ..; mvn clean package"
+    exit 1
+  fi
+fi
+
+function installApp {
+   ssh $remote_host "getent group $user &> /dev/null || groupadd -r $user &> /dev/null"
+   ssh $remote_host "getent passwd $user &> /dev/null || useradd -r -g $user -d /opt/$app_name -s /sbin/nologin $user &> /dev/null"
+   for i in $(find . -type d| grep $app_name); do
+     echo "Create directory: ${i:1}"
+     ssh $remote_host "mkdir -p ${i:1}"
+     echo "Set permissions for user $user to directory: ${i:1}"
+     ssh $remote_host "chown $user:$user ${i:1}"
+     for j in $(find $i -maxdepth 1 -type f); do
+       echo "   Copy file: ${j:1}"
+       scp -q $j $remote_host:${j:1}
+       if [[ $j =~ .example$ ]]; then
+     echo " * Copy main config files: ${j:1:${#j}-9}"
+     scp -q $j $remote_host:${j:1:${#j}-9}
+       fi
+     done
+   done
+
+   ssh $remote_host "echo $version > /etc/$app_name/$app_name.issue"
+
+   echo ""
+   echo "Copy init script to /etc/init.d/$app_name"
+   scp -q ./etc/init.d/$app_name $remote_host:/etc/init.d/
+   ssh $remote_host "chmod 755 /etc/init.d/$app_name"
+
+   echo "Copy application to /opt/$app_name"
+   scp -q ../$app_dir/target/$app_name.jar $remote_host:/opt/$app_name/
+
+   echo "Add service $app_name to runlevel"
+   ssh $remote_host "chkconfig --add $app_name"
+
+   RETVAL=0
+   return 0
+}
+
+function updateApp {
+   for i in $(find . -type d| grep $app_name); do
+     echo "Create directory: ${i:1}"
+     ssh $remote_host "mkdir -p ${i:1}"
+     for j in $(find $i -maxdepth 1 -type f); do
+       echo "   Copy file: ${j:1}"
+       scp -q $j $remote_host:${j:1}
+     done
+   done
+
+   ssh $remote_host "echo $version > /etc/$app_name/$app_name.issue"
+
+   echo ""
+   echo "Copy init script to /etc/init.d/$app_name"
+   scp -q ./etc/init.d/$app_name $remote_host:/etc/init.d/
+
+   echo "Copy application to /opt/$app_name"
+   scp -q ../$app_dir/target/$app_name.jar $remote_host:/opt/$app_name/
+
+   RETVAL=0
+   return 0
+}
+
+function removeApp {
+   if [[ $(ssh $remote_host "ls /var/run/$app_name* 2> /dev/null") =~ $app_name ]] ; then
+      RETVAL=1
+      echo "Error: PID files exists of $app_name application. Stop all instances of $app_name and will be convince all pid files /var/run/$app_name* has been deleted"
+      return 1
+   fi
+
+   for i in $(ssh $remote_host "chkconfig --list |grep $app_name |cut -f 1"); do
+     echo "Remove service $i from runlevel"
+     ssh $remote_host "chkconfig --del $i"
+   done
+
+   for i in $(find . -type d| grep $app_name); do
+     echo "Delete directory: ${i:1}"
+     ssh $remote_host "rm -rf ${i:1}"
+   done
+
+   echo "Delete init scripts"
+   ssh $remote_host "rm -rf /etc/init.d/${app_name}*"
+
+   echo "Delete user $user from system"
+   ssh $remote_host "userdel $user"
+
+   RETVAL=0
+   return 0
+}
+
+function rpmApp {
+   echo "Build RPM $source_dir"
+   source ./$app_name.description
+   rpmbuild -ba $source_dir/package/$app_name.SPEC \
+            --define "_srcdir $source_dir" \
+            --define "_version $version" \
+            --define "_app_dir $app_dir" \
+            --define "_app_name $app_name" \
+            --define "_user $user" \
+            --define "_app_summary $summary" \
+            --define "_app_description $description"
+
+   RETVAL=0
+   return 0
+}
+
+function main {
+   RETVAL=1
+   case "$1" in
+      install)
+    # Install application
+    installApp
+    ;;
+      update)
+    # Update application
+    updateApp
+    ;;
+      remove)
+    # Remove application
+    removeApp
+    ;;
+      rpm)
+    # Make RPM package of application
+    rpmApp
+    ;;
+      *)
+    echo
+    echo "Usage: $0 COMMAND { REMOTE_HOST }"
+    echo "where COMMAND := { install | update | remove | rpm }"
+    echo "      REMOTE_HOST := ip address or name of host for install/update/remove commands."
+
+    RETVAL=1
+    ;;
+      esac
+
+   exit $RETVAL
+}
+
+main $1 $2 $3

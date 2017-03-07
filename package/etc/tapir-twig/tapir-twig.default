@@ -1,0 +1,78 @@
+#/*
+# *    Copyright 2017 SIP3.IO CORP.
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+
+#
+# Created by windsent (c) 2017
+#
+
+
+JAVA_HOME="/usr/java/default"
+
+# change limits max users processes
+#ulimit -u 2048
+
+# change limits open files
+#ulimit -n 8192
+
+# service name with the first letter in lowercase
+serviceNameLo=$APPLICATION
+
+# service name
+serviceName="Sip3.io Tapir Twig"
+
+# OS user name for the service
+serviceUser=${serviceNameLo%%-*}
+
+# OS group name for the service
+serviceGroup="nobody"
+
+# home directory of the service application
+applDir="/opt/$serviceNameLo"
+
+# home directory of the service user
+serviceUserHome="/opt/$serviceNameLo"
+
+# log file for StdOut/StdErr
+serviceLogFile="/var/log/$serviceNameLo/default$INSTANCE.log"
+
+# application's log properties file
+servicePropertyFile="--spring.config.location=/etc/$serviceNameLo/$serviceNameLo$INSTANCE.properties --logging.config=/etc/$serviceNameLo/logback$INSTANCE.xml"
+
+
+# maximum number of seconds to wait for the daemon to terminate normally
+maxShutdownTime=15
+
+# name of PID file (PID = process ID number)
+pidFile="/var/run/$serviceNameLo$INSTANCE.pid"
+
+# name of the Java launcher without the path
+javaCommand="java"
+
+#specifics JVM configuration properties like how many memory to provide for process, garbage collector type, etc
+jvmArgs="-Xms512M -Xmx1024M -Xss256k -Dfile.encoding=ISO-8859-1 $serviceLoggingPropertyFile"
+
+# file name of the Java application launcher executable
+javaExe="$JAVA_HOME/bin/$javaCommand"
+
+# a keyword that occurs on the commandline, used to detect an already running service process and to distinguish it from others
+javaCommandLineKeyword="$serviceNameLo.jar"
+
+# arguments for Java launcher
+javaArgs="$jvmArgs $jvmGc -jar $applDir/$javaCommandLineKeyword $servicePropertyFile"
+
+# command line to start the Java service application
+javaCommandLine="$javaExe $javaArgs"
+
