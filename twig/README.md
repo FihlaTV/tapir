@@ -2,7 +2,7 @@
 
 **Tapir Twig** provides REST API.
 
-![twig](https://cloud.githubusercontent.com/assets/16978841/23795386/d10c47a2-05ae-11e7-82b0-0fee4648d803.png)
+![](https://cloud.githubusercontent.com/assets/16978841/23796439/608e7030-05b4-11e7-9fe9-dcb8eac9334b.png)
 
 ### Build & Install ###
 
