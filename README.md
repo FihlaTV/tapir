@@ -9,7 +9,7 @@ time.
 
 ### ###
 
-![TAPIR](https://cloud.githubusercontent.com/assets/16978841/23795385/d10a411e-05ae-11e7-8a54-1a7501655d14.png)
+![](https://cloud.githubusercontent.com/assets/1871737/23656420/b089fe5e-034a-11e7-8244-4a2a7594ddd3.gif)
 
 ### Tapir includes four modules: ###
 
@@ -35,7 +35,7 @@ and significant time savings in problems solving for trunk and access connection
 
 ### Tapir architecture ###
 
-![](https://cloud.githubusercontent.com/assets/1871737/23656460/ddd32c28-034a-11e7-90a8-a1ba4e55c079.png)
+![](https://cloud.githubusercontent.com/assets/16978841/23796440/608eb4f0-05b4-11e7-92f7-93138579694b.png)
 
 ### Installation ###
 
