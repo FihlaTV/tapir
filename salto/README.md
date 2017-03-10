@@ -2,7 +2,7 @@
 
 **Tapir Salto** receives parsed SIP data from **Tapir Captain** and saves it to database. 
 
-![](https://cloud.githubusercontent.com/assets/1871737/23656418/b080c6ae-034a-11e7-9953-4b2d319576f1.png)
+![salto](https://cloud.githubusercontent.com/assets/16978841/23795387/d10ca102-05ae-11e7-89a7-c95c33c0b200.png)
 
 ### Build & Install ###
 
