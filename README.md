@@ -9,7 +9,7 @@ time.
 
 ### ###
 
-![](https://cloud.githubusercontent.com/assets/1871737/23656420/b089fe5e-034a-11e7-8244-4a2a7594ddd3.gif)
+![TAPIR](https://cloud.githubusercontent.com/assets/16978841/23795385/d10a411e-05ae-11e7-8a54-1a7501655d14.png)
 
 ### Tapir includes four modules: ###
 
