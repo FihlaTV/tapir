@@ -14,34 +14,24 @@
  *    limitations under the License.
  */
 
-package io.sip3.tapir.salto.model;
+package io.sip3.tapir.core.util;
 
 import java.nio.ByteBuffer;
 
 /**
- * Created by agafox.
+ * Created by agafonov on 02/12/15.
  */
-public class ByteBufferContainer {
+public class HexUtil {
 
-    private final ByteBuffer buffer = ByteBuffer.allocateDirect(65535);
+    private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
 
-    private boolean ignoreContent;
-
-    public void clear() {
-        ignoreContent = true;
-        buffer.clear();
-    }
-
-    public void flip() {
-        ignoreContent = false;
-        buffer.flip();
-    }
-
-    public boolean shouldIgnoreContent() {
-        return ignoreContent;
-    }
-
-    public ByteBuffer getBuffer() {
-        return buffer;
+    public static String bytesToHex(ByteBuffer buffer) {
+        char[] hexChars = new char[buffer.limit() * 2];
+        for (int i = 0; i < buffer.limit(); i++) {
+            int v = buffer.get(i) & 0xff;
+            hexChars[i * 2] = hexArray[v >>> 4];
+            hexChars[i * 2 + 1] = hexArray[v & 0x0f];
+        }
+        return new String(hexChars);
     }
 }

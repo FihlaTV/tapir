@@ -23,12 +23,33 @@ import java.nio.ByteBuffer;
  */
 public class ByteBufferUtil {
 
+    public static boolean shift(ByteBuffer buffer, int distance) {
+        if (distance <= 0) {
+            throw new IllegalArgumentException("Negative distance: " + distance);
+        }
+
+        int limit = buffer.limit();
+        int position = buffer.position() + distance;
+
+        if (position > limit) {
+            buffer.position(limit);
+            return false;
+        } else {
+            buffer.position(position);
+            return true;
+        }
+    }
+
     public static String getIPv4String(ByteBuffer buffer) {
         return (buffer.get() & 0xff) + "." + (buffer.get() & 0xff) + "." + (buffer.get() & 0xff) + "." + (buffer.get() & 0xff);
     }
 
     public static int getUnsignedShort(ByteBuffer buffer) {
         return buffer.getShort() & 0xffff;
+    }
+
+    public static long getUnsignedInt(ByteBuffer buffer) {
+        return buffer.getInt() & 0xffffffff;
     }
 
     public static String getString(ByteBuffer buffer, int size) {

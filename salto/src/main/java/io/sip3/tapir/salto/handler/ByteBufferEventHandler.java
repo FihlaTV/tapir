@@ -17,6 +17,7 @@
 package io.sip3.tapir.salto.handler;
 
 import com.lmax.disruptor.EventHandler;
+import io.sip3.tapir.core.util.HexUtil;
 import io.sip3.tapir.salto.model.ByteBufferContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,10 @@ public class ByteBufferEventHandler implements EventHandler<ByteBufferContainer>
     private static final Logger logger = LoggerFactory.getLogger(ByteBufferEventHandler.class);
 
     @Autowired
-    private List<BatchHandler> handlers;
+    private ByteBufferHepHandler hep;
+
+    @Autowired
+    private List<ByteBufferBatchHandler> handlers;
 
     private int order;
 
@@ -56,12 +60,12 @@ public class ByteBufferEventHandler implements EventHandler<ByteBufferContainer>
 
     @PostConstruct
     public void order() {
-        handlers.sort(Comparator.comparingInt(BatchHandler::getType));
+        handlers.sort(Comparator.comparingInt(ByteBufferBatchHandler::getType));
     }
 
     @Override
     public void onEvent(ByteBufferContainer container, long sequence, boolean endOfBatch) throws Exception {
-        if (container.shouldHandleImmediately()) {
+        if (container.shouldIgnoreContent()) {
             handlers.forEach(handler -> {
                 try {
                     handler.onEvent(container);
@@ -74,13 +78,23 @@ public class ByteBufferEventHandler implements EventHandler<ByteBufferContainer>
         if ((sequence % total) != order) {
             return;
         }
+
         ByteBuffer buffer = container.getBuffer();
-        int type = buffer.get();
+        int type = -1;
         try {
+            // HEP protocol is implemented in many SIP platforms, such as: FreeSwitch, Asterisk, Kamailio, e.t.c.
+            // Tapir Salto casts HEP to internal protocol for further handling.
+            hep.onEvent(container);
+            if (container.shouldIgnoreContent()) {
+                return;
+            }
+
+            type = buffer.get();
             handlers.get(type).onEvent(container);
         } catch (IndexOutOfBoundsException e) {
             logger.error("Unknown protocol type:" + type);
         } catch (Exception e) {
+            logger.error("Content: ", HexUtil.bytesToHex(buffer));
             logger.error("Got exception...", e);
         }
     }

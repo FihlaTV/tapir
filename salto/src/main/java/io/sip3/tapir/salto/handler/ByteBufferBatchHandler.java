@@ -31,9 +31,9 @@ import java.util.List;
 /**
  * Created by agafox.
  */
-public abstract class BatchHandler<T> implements WorkHandler<ByteBufferContainer> {
+public abstract class ByteBufferBatchHandler<T> implements WorkHandler<ByteBufferContainer> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BatchHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ByteBufferBatchHandler.class);
 
     @Autowired
     private Serializer<ByteBuffer, T> serializer;
@@ -52,7 +52,7 @@ public abstract class BatchHandler<T> implements WorkHandler<ByteBufferContainer
 
     @Override
     public void onEvent(ByteBufferContainer container) throws Exception {
-        if (container.shouldHandleImmediately()) {
+        if (container.shouldIgnoreContent()) {
             handle();
             return;
         }

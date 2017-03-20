@@ -14,31 +14,22 @@
  *    limitations under the License.
  */
 
-package io.sip3.tapir.salto.handler;
+package io.sip3.tapir.core.util;
 
-import io.sip3.tapir.core.SipMessage;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.junit.Test;
+
+import java.nio.ByteBuffer;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by agafox.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SipMessageBatchHandler extends BatchHandler<SipMessage> {
+public class HexUtilTest {
 
-    @Value("${mongo.batchSize}")
-    private int batchSize;
-
-    @Override
-    public int getType() {
-        return 0;
-    }
-
-    @Override
-    protected int getBatchSize() {
-        return batchSize;
+    @Test
+    public void checkBytesToHex() {
+        ByteBuffer buffer = ByteBuffer.wrap("Hello, World!".getBytes());
+        assertEquals("48656C6C6F2C20576F726C6421", HexUtil.bytesToHex(buffer));
     }
 }

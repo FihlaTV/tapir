@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.sip3.tapir.salto.handler;
+package io.sip3.tapir.salto.handler.sip;
 
 import com.lmax.disruptor.WorkHandler;
 import com.mongodb.client.MongoDatabase;

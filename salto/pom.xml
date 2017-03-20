@@ -16,6 +16,7 @@
     <properties>
         <disruptor.version>3.3.6</disruptor.version>
         <mongodb.version>3.3.0</mongodb.version>
+        <junitparams.version>1.0.4</junitparams.version>
     </properties>
 
     <dependencies>
@@ -44,6 +45,13 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
             <version>${mongodb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.pragmatists</groupId>
+            <artifactId>JUnitParams</artifactId>
+            <version>${junitparams.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
