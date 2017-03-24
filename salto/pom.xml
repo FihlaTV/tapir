@@ -16,6 +16,7 @@
     <properties>
         <disruptor.version>3.3.6</disruptor.version>
         <mongodb.version>3.3.0</mongodb.version>
+        <commons-net.version>3.6</commons-net.version>
         <junitparams.version>1.0.4</junitparams.version>
     </properties>
 
@@ -45,6 +46,12 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
             <version>${mongodb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net.version}</version>
         </dependency>
 
         <dependency>

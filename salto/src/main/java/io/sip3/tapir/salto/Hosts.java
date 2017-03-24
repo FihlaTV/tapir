@@ -17,10 +17,11 @@
 package io.sip3.tapir.salto;
 
 import io.sip3.tapir.salto.configuration.HostConfiguration;
+import org.apache.commons.net.util.SubnetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,19 +31,25 @@ import java.util.Map;
 @Component
 public class Hosts {
 
-    @Autowired(required = false)
-    public HostConfiguration configuration;
-
     private final Map<String, String> hosts = new HashMap<>();
 
-    @PostConstruct
-    public void init() {
-        if (configuration != null) {
-            configuration.getHosts().forEach(host -> {
-                String name = host.getName();
-                host.getAddr().forEach(addr -> hosts.put(addr, name));
+    public Hosts() {
+    }
+
+    @Autowired(required = false)
+    public Hosts(HostConfiguration configuration) {
+        configuration.getHosts().forEach(host -> {
+            String name = host.getName();
+            host.getAddr().forEach(addr -> {
+                if (addr.contains("/")) {
+                    Arrays.asList(
+                            new SubnetUtils(addr).getInfo().getAllAddresses()
+                    ).forEach(a -> hosts.put(a, name));
+                } else {
+                    hosts.put(addr, name);
+                }
             });
-        }
+        });
     }
 
     public String resolve(String addr) {
