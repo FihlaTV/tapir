@@ -1,6 +1,6 @@
 # TAPIR Captain #
 
-**Tapir Captain** captures SIP from UDP/TCP/IP2IP packets and sends it to **Tapir Salto**. 
+**Tapir Captain** captures SIP from UDP/TCP/IP2IP/HEPv3 packets and sends it to **Tapir Salto**. 
 
 ![](https://cloud.githubusercontent.com/assets/1871737/23656419/b084699e-034a-11e7-852f-329eac1291a5.png)
 
