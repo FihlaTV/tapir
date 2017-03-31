@@ -1,8 +1,8 @@
 # TAPIR Salto #
 
-**Tapir Salto** receives parsed SIP data from **Tapir Captain** and saves it to database. 
+**Tapir Salto** receives parsed SIP data from **Tapir Captain** and saves it to database. Since March 2017 **Salto** can process HEPv3 packets too.
 
-![salto](https://cloud.githubusercontent.com/assets/16978841/23795387/d10ca102-05ae-11e7-89a7-c95c33c0b200.png)
+![salto](https://cloud.githubusercontent.com/assets/16978841/24553230/25aa2dcc-1632-11e7-9799-739200f5088d.png)
 
 ### Build & Install ###
 
