@@ -18,9 +18,9 @@ time.
 3. **Tapir Twig** provides REST API for **Hoof** to get data from the database.
 4. **Tapir Hoof** is a convenient and easy web-based user interface to search and display call data.
 
-**Captain** can capture data directly from the network interface (UDP/TCP/encapsulated IP2IP/HEPv3), from a single PCAP file or check a directory for new incoming data files to process.
+**Captain** can capture data directly from the network interface (UDP/TCP/encapsulated IP2IP), from a single PCAP file or check a directory for new incoming data files to process.
 
-**Salto** receives parsed data from **Captain**, validates its structure and stores extracted data in the database. The **Salto** can be easily scaled to achieve the desired performance. 
+**Salto** receives parsed data from **Captain**, validates its structure and stores extracted data in the database. Since March 2017 we can process HEPv3 packets too. The **Salto** can be easily scaled to achieve the desired performance. 
 
 **Twig** offers REST API for user interface queries and presents statistical data.
 
