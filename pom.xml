@@ -23,7 +23,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <tapir.version>2.1.20170324-SNAPSHOT</tapir.version>
+        <tapir.version>2.1.20170331-SNAPSHOT</tapir.version>
     </properties>
 
     <build>

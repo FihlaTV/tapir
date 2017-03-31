@@ -7,8 +7,7 @@ URL                : http://sip3.io
 Vendor             : Sip3.io
 Packager           : windsent@sip3.io
 BuildArch          : noarch
-Provides           : java
-Requires           : jre >= 1.8, initscripts >= 9.0, chkconfig >= 1.3
+Requires           : jdk >= 1.8, initscripts >= 9.0, chkconfig >= 1.3
 
 %define __os_install_post %{nil}
 %description

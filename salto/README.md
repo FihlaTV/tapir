@@ -11,7 +11,7 @@ Follow next steps to build **Salto** on your local machine and to install it to 
 #### 1. Build ####
 
 Make sure you have installed:
-* Oracle JRE HotSpot, version 1.8+
+* Oracle JRE HotSpot, version 1.8+.
 * Apache Maven, version 3.0.0+.
 
 Build **Tapir** with Apache Maven:
@@ -22,10 +22,19 @@ Build **Tapir** with Apache Maven:
 
 #### 2. Install ####
 
-The best way to install **Salto** on your Linux is to run ```./package/tapir-salto``` script to create RMP and install it with ```rpm``` utility:
+The best way to install **Salto** on your Linux is to run ```./package/tapir-salto``` script to create RPM and install it with ```rpm``` utility:
 ```
 # cd </path/to/Tapir/package>
 # ./tapir-salto rpm
+```
+RPM requires Oracle JDK HotSpot 1.8+ (use RPM option --nodeps, if you sure use Oracle JRE HotSpot 1.8+).
+
+Using Sip3.io YUM repository:
+```
+# <Download Oracle JDK HotSpot 1.8, e.g. jdk-8u121-linux-x64.rpm to /tmp>
+# yum localinstall /tmp/jdk-8u121-linux-x64.rpm -y
+# curl http://sip3.io/repo/yum/sip3io.repo > /etc/yum.repos.d/sip3io.repo
+# yum install tapir-salto -y
 ```
 
 Alternatively, you can run ```./package/tapir-salto``` script to automatically install **Salto** to local/remote Linux:
@@ -39,8 +48,8 @@ _**Hint:** Run ```./package/tapir-salto``` script to update/remove **Salto**._
 ### Configure & Run ###
 
 Make sure you have installed:
-* Oracle JRE HotSpot, version 1.8+
-* Mongo, version 3.0.0+. 
+* [Oracle JRE HotSpot, version 1.8+.](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* Mongo, version 3.0.0+.
 * Redis, version 2.8.9+.
 
 #### 1. Configure ####

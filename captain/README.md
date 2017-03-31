@@ -11,7 +11,7 @@ Follow next steps to build **Captain** on your local machine and to install it t
 #### 1. Build ####
 
 Make sure you have installed:
-* Oracle JRE HotSpot, version 1.8+
+* Oracle JRE HotSpot, version 1.8+.
 * Apache Maven, version 3.0.0+.
 
 Build **Tapir** with Apache Maven:
@@ -22,10 +22,19 @@ Build **Tapir** with Apache Maven:
 
 #### 2. Install ####
 
-The best way to install **Captain** on your Linux is to run ```./package/tapir-captain``` script to create RMP and install it with ```rpm``` utility:
+The best way to install **Captain** on your Linux is to run ```./package/tapir-captain``` script to create RPM and install it with ```rpm``` utility:
 ```
 # cd </path/to/Tapir/package>
 # ./tapir-captain rpm
+```
+RPM requires Oracle JDK HotSpot 1.8+ (use RPM option --nodeps, if you sure use Oracle JRE HotSpot 1.8+).
+
+Using Sip3.io YUM repository:
+```
+# <Download Oracle JDK HotSpot 1.8, e.g. jdk-8u121-linux-x64.rpm to /tmp>
+# yum localinstall /tmp/jdk-8u121-linux-x64.rpm -y
+# curl http://sip3.io/repo/yum/sip3io.repo > /etc/yum.repos.d/sip3io.repo
+# yum install tapir-captain -y
 ```
 
 Alternatively, you can run ```./package/tapir-captain``` script to automatically install **Captain** to local/remote Linux:
@@ -39,7 +48,7 @@ _**Hint:** Run ```./package/tapir-captain``` script to update/remove **Captain**
 ### Configure & Run ###
 
 Make sure you have installed:
-* Oracle JRE HotSpot, version 1.8+
+* [Oracle JRE HotSpot, version 1.8+.](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * libpcap, version 1.4.0+. 
 
 #### 1. Configure ####
