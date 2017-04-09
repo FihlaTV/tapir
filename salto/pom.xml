@@ -14,6 +14,7 @@
     </parent>
 
     <properties>
+        <tapir.basedir>${project.basedir}/..</tapir.basedir>
         <disruptor.version>3.3.6</disruptor.version>
         <mongodb.version>3.3.0</mongodb.version>
         <commons-net.version>3.6</commons-net.version>

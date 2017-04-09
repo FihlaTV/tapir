@@ -14,8 +14,9 @@
     </parent>
 
     <properties>
+        <tapir.basedir>${project.basedir}/..</tapir.basedir>
         <sip.version>1.2.317</sip.version>
-        <io.pkts.version>2.0.6-SNAPSHOT</io.pkts.version>
+        <io.pkts.version>2.0.8-SNAPSHOT</io.pkts.version>
         <junitparams.version>1.0.4</junitparams.version>
     </properties>
 
@@ -24,6 +25,11 @@
             <groupId>javax.sip</groupId>
             <artifactId>jain-sip-ri</artifactId>
             <version>${sip.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pkts</groupId>
+            <artifactId>pkts-buffers</artifactId>
+            <version>${io.pkts.version}</version>
         </dependency>
         <dependency>
             <groupId>io.pkts</groupId>
