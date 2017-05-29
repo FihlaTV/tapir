@@ -18,7 +18,6 @@ package io.sip3.tapir.salto.handler.sip;
 
 import io.sip3.tapir.core.SipMessage;
 import io.sip3.tapir.salto.handler.ByteBufferBatchHandler;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,16 +29,8 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SipMessageBatchHandler extends ByteBufferBatchHandler<SipMessage> {
 
-    @Value("${mongo.batchSize}")
-    private int batchSize;
-
     @Override
     public int getType() {
         return 0;
-    }
-
-    @Override
-    protected int getBatchSize() {
-        return batchSize;
     }
 }

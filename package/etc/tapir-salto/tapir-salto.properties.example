@@ -3,7 +3,6 @@ udp.port = 15060
 
 #! Mongo
 mongo.uri = mongodb://127.0.0.1:27017/tapir
-mongo.batchSize = 256
 mongo.partition = 1h
 
 #! Redis
@@ -27,4 +26,5 @@ ttl.statistic = 15d
 
 #! Disruptor
 disruptor.capacity = 4096
+disruptor.batchSize = 128
 disruptor.consumers = 8

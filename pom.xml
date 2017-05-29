@@ -10,8 +10,8 @@
     <version>${tapir.version}</version>
     <modules>
         <module>core</module>
-        <module>salto</module>
         <module>captain</module>
+        <module>salto</module>
         <module>twig</module>
     </modules>
 
@@ -24,7 +24,7 @@
     <properties>
         <tapir.basedir>${project.basedir}</tapir.basedir>
         <java.version>1.8</java.version>
-        <tapir.version>2.1.20170410-SNAPSHOT</tapir.version>
+        <tapir.version>2.2.20170529-SNAPSHOT</tapir.version>
     </properties>
 
     <repositories>

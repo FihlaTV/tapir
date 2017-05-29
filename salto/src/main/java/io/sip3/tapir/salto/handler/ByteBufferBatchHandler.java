@@ -23,6 +23,7 @@ import io.sip3.tapir.salto.serializer.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ import java.util.List;
 public abstract class ByteBufferBatchHandler<T> implements WorkHandler<ByteBufferContainer> {
 
     private static final Logger logger = LoggerFactory.getLogger(ByteBufferBatchHandler.class);
+
+    @Value("${disruptor.batchSize}")
+    private int batchSize;
 
     @Autowired
     private Serializer<ByteBuffer, T> serializer;
@@ -47,8 +51,6 @@ public abstract class ByteBufferBatchHandler<T> implements WorkHandler<ByteBuffe
     private final List<T> entities = new ArrayList<>();
 
     public abstract int getType();
-
-    protected abstract int getBatchSize();
 
     @Override
     public void onEvent(ByteBufferContainer container) throws Exception {
@@ -64,7 +66,7 @@ public abstract class ByteBufferBatchHandler<T> implements WorkHandler<ByteBuffe
             customizer.customize(entity);
         }
         entities.add(entity);
-        if (entities.size() >= getBatchSize()) {
+        if (entities.size() >= batchSize) {
             handle();
         }
     }
