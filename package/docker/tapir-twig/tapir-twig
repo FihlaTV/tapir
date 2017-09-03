@@ -1,0 +1,22 @@
+#!/bin/sh
+
+echo "Starting Tapir Twig"
+
+if [[ ! -e /etc/tapir-twig/tapir-twig.properties ]]; then
+   cp -p /opt/tapir-twig/tapir-twig.properties.example /etc/tapir-twig/tapir-twig.properties
+   echo "New config tapir-twig.properties copied..."
+fi
+
+if [[ ! -e /etc/tapir-twig/logback-twig.xml ]]; then
+   cp -p /opt/tapir-twig/logback.xml.example /etc/tapir-twig/logback-twig.xml
+   echo "New logback config copied..."
+fi
+
+export PATH=$PATH:/usr/java/default/bin
+
+if [[ -z ${JAVA_OPTIONS} ]]; then
+   export JAVA_OPTIONS="-Xms512M -Xmx1024M -Xss256k"
+fi
+
+java $JAVA_OPTIONS -Dfile.encoding=ISO-8859-1 -jar /opt/tapir-twig/tapir-twig.jar --spring.config.location=/etc/tapir-twig/tapir-twig.properties --logging.config=/etc/tapir-twig/logback-twig.xml 2>&1 >> /var/log/tapir-twig/tapir-twig.log
+

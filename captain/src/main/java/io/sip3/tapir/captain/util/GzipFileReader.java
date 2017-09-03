@@ -16,7 +16,7 @@
 
 package io.sip3.tapir.captain.util;
 
-import com.sun.javafx.PlatformUtil;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -36,7 +36,7 @@ public class GzipFileReader {
 
     public static void read(File file, Consumer<File> handle) throws IOException {
         Path temp;
-        if (PlatformUtil.isUnix()) {
+        if (SystemUtils.IS_OS_LINUX) {
             temp = Files.createTempFile(SHARED_MEMORY, TEMP_PREFIX, null);
         } else {
             temp = Files.createTempFile(TEMP_PREFIX, null);

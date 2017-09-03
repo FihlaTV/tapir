@@ -1,0 +1,27 @@
+#!/bin/sh
+
+echo "Starting Tapir Salto"
+
+if [[ ! -e /etc/tapir-salto/tapir-salto.properties ]]; then
+   cp -p /opt/tapir-salto/tapir-salto.properties.example /etc/tapir-salto/tapir-salto.properties
+   echo "New config tapir-salto.properties copied..."
+fi
+
+if [[ ! -e /etc/tapir-salto/logback-salto.xml ]]; then
+   cp -p /opt/tapir-salto/logback.xml.example /etc/tapir-salto/logback-salto.xml
+   echo "New logback config copied..."
+fi
+
+if [[ ! -e /etc/tapir-salto/hosts.yml ]]; then
+   cp -p /opt/tapir-salto/hosts.yml.example /etc/tapir-salto/hosts.yml
+   echo "New hosts config copied..."
+fi
+
+export PATH=$PATH:/usr/java/default/bin
+
+if [[ -z ${JAVA_OPTIONS} ]]; then
+   export JAVA_OPTIONS="-Xms512M -Xmx1024M -Xss256k"
+fi
+
+java $JAVA_OPTIONS -Dfile.encoding=ISO-8859-1 -jar /opt/tapir-salto/tapir-salto.jar --spring.config.location=/etc/tapir-salto/tapir-salto.properties --logging.config=/etc/tapir-salto/logback-salto.xml 2>&1 >> /var/log/tapir-salto/tapir-salto.log
+

@@ -24,7 +24,7 @@
     <properties>
         <tapir.basedir>${project.basedir}</tapir.basedir>
         <java.version>1.8</java.version>
-        <tapir.version>2.2.20170529-SNAPSHOT</tapir.version>
+        <tapir.version>2.2.20170903-SNAPSHOT</tapir.version>
     </properties>
 
     <repositories>

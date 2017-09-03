@@ -1,0 +1,22 @@
+#!/bin/sh
+
+echo "Starting Tapir Captain"
+
+if [[ ! -e /etc/tapir-captain/tapir-captain.properties ]]; then
+   cp -p /opt/tapir-captain/tapir-captain.properties.example /etc/tapir-captain/tapir-captain.properties
+   echo "New config tapir-captain.properties copied..."
+fi
+
+if [[ ! -e /etc/tapir-captain/logback-captain.xml ]]; then
+   cp -p /opt/tapir-captain/logback.xml.example /etc/tapir-captain/logback-captain.xml
+   echo "New logback config copied..."
+fi
+
+export PATH=$PATH:/usr/java/default/bin
+
+if [[ -z ${JAVA_OPTIONS} ]]; then
+   export JAVA_OPTIONS="-Xms512M -Xmx1024M -Xss256k"
+fi
+
+java $JAVA_OPTIONS -Dfile.encoding=ISO-8859-1 -jar /opt/tapir-captain/tapir-captain.jar --spring.config.location=/etc/tapir-captain/tapir-captain.properties --logging.config=/etc/tapir-captain/logback-captain.xml 2>&1 >> /var/log/tapir-captain/tapir-captain.log
+

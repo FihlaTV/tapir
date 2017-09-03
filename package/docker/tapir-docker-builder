@@ -1,0 +1,155 @@
+#!/bin/bash
+#/*
+# *    Copyright 2017 SIP3.IO CORP.
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+
+#
+# Script for build
+#
+# Version 2.2.20170903
+# Created by windsent (c) 2017
+#
+
+DOCKER_DIR=${PWD}
+MAIN_DIR=$DOCKER_DIR/../..
+PACKAGE_DIR=$MAIN_DIR/package
+DOCKER_PATH=""
+
+export PATH=$PATH:$DOCKER_PATH
+
+function makeTapir {
+   DOCKER_PROJECT=$1
+   DOCKER_REPO=$2
+
+   # Check dependencies:
+   echo "Checking Docker..."
+   $(docker -v 2>&1 | grep version > /dev/null)
+   if [ $? -ne 0 ]; then
+      echo "Can't find Docker, it should be installed"
+
+      RETVAL=1
+      return 1
+   fi
+
+   echo "Configure Docker:"
+   cd $DOCKER_DIR
+
+   DOCKER_PROXY=""
+   read -p "Are you want to use proxy? (y/N) " -n 1 -r
+   echo    # (optional) move to a new line
+   if [[ $REPLY =~ ^[Yy]$ ]]; then
+      read -p "Please, enter address and port of http and https proxy: (e.g. 127.0.0.1:3128) " -r
+      DOCKER_PROXY="--build-arg http_proxy=http://$REPLY --build-arg https_proxy=http://$REPLY"
+   fi
+
+   if [ ! -z $DOCKER_REPO ]; then
+      DOCKER_REPO="$DOCKER_REPO/"
+   fi
+   if [ ! -z $DOCKER_PROJECT ]; then 
+      cd $DOCKER_DIR/tapir-captain
+      docker build -t $DOCKER_REPO$DOCKER_PROJECT/tapir-captain $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-salto
+      docker build -t $DOCKER_REPO$DOCKER_PROJECT/tapir-salto $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-twig
+      docker build -t $DOCKER_REPO$DOCKER_PROJECT/tapir-twig $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-cache
+      docker build -t $DOCKER_REPO$DOCKER_PROJECT/tapir-cache $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-storage
+      docker build -t $DOCKER_REPO$DOCKER_PROJECT/tapir-storage $DOCKER_PROXY .
+   else
+      cd $DOCKER_DIR/tapir-captain
+      docker build -t tapir-captain $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-salto
+      docker build -t tapir-salto $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-twig
+      docker build -t tapir-twig $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-cache
+      docker build -t tapir-cache $DOCKER_PROXY .
+
+      cd $DOCKER_DIR/tapir-storage
+      docker build -t tapir-storage $DOCKER_PROXY .
+   fi
+
+   return 0
+}
+
+function pushTapir {
+   DOCKER_PROJECT=$1
+   DOCKER_REPO=$2
+
+   if [ ! -z $DOCKER_REPO ]; then
+      docker logout
+      docker login --username $DOCKER_PROJECT $DOCKER_REPO
+      DOCKER_REPO="$DOCKER_REPO/"
+   fi
+   if [ ! -z $DOCKER_PROJECT ]; then 
+      docker push $DOCKER_REPO$DOCKER_PROJECT/tapir-captain .
+      docker push $DOCKER_REPO$DOCKER_PROJECT/tapir-salto .
+      docker push $DOCKER_REPO$DOCKER_PROJECT/tapir-twig .
+      docker push $DOCKER_REPO$DOCKER_PROJECT/tapir-cache .
+      docker push $DOCKER_REPO$DOCKER_PROJECT/tapir-storage .
+   else
+      echo "Nothing to do..."
+   fi
+}
+
+function cleanTapir {
+   echo "Not implemented yet"
+   return 0
+}
+
+function main {
+   RETVAL=0
+   case "$1" in
+      make)
+         # Make Tapir docker images
+         makeTapir $2 $3
+         ;;
+      push)
+         # Push Tapir docker images to repository
+         pushTapir $2 $3
+         ;;
+      clean)
+         # Clean temporary files
+         cleanTapir
+         ;;
+      *)
+         echo
+         echo "Script for build Tapir Docker"
+         echo
+         echo "Usage: $0 {make|push|clean} LOGIN REPOSITORY"
+         echo "where "
+         echo "       make       - download Tapir docker images"
+         echo "       push       - upload Tapir docker images to private repository"
+         echo "       clean      - clean all containers and docker settings of Tapir"
+         echo ""
+         echo "       LOGIN      - Username of private repository"
+         echo "       REPOSITORY - Private repository"
+
+         RETVAL=1
+         ;;
+      esac
+
+   exit $RETVAL
+}
+
+main $1

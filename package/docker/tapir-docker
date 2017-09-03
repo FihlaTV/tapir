@@ -1,0 +1,136 @@
+#!/bin/bash
+
+#/*
+# *    Copyright 2017 SIP3.IO CORP.
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+
+#
+# Script for multiply of application instance
+#
+# Version 2.2.20170903
+# Created by windsent (c) 2017
+#
+
+DOCKER_PATH=""
+
+export PATH=$PATH:$DOCKER_PATH
+
+echo "Checking Docker..."
+$(docker -v 2>&1 | grep version > /dev/null)
+if [ $? -ne 0 ]; then
+    echo "Can't find Docker, it should be installed"
+    exit 1
+fi
+
+function pullTapir {
+    DOCKER_PROJECT=$1
+    DOCKER_REPO=$2
+
+   if [ ! -z $DOCKER_REPO ]; then
+      docker logout
+      docker login --username $DOCKER_PROJECT $DOCKER_REPO
+      DOCKER_REPO="$DOCKER_REPO/"
+   fi
+   if [ ! -z $DOCKER_PROJECT ]; then 
+        docker docker pull $DOCKER_REPO$DOCKER_PROJECT/tapir-cache
+        docker docker pull $DOCKER_REPO$DOCKER_PROJECT/tapir-capture
+        docker docker pull $DOCKER_REPO$DOCKER_PROJECT/tapir-salto
+        docker docker pull $DOCKER_REPO$DOCKER_PROJECT/tapir-storage
+        docker docker pull $DOCKER_REPO$DOCKER_PROJECT/tapir-twig
+        docker docker pull $DOCKER_REPO$DOCKER_PROJECT/tapir-hoof
+    else
+        echo "Nothing to do"
+    fi
+
+    return 0
+}
+
+function initTapir {
+    docker network list | grep tapir || docker network create tapir
+
+    docker volume list | grep tapir-logs || docker volume create tapir-logs
+    docker volume list | grep tapir-data || docker volume create tapir-data
+    docker volume list | grep tapir-configs || docker volume create tapir-configs
+    docker volume list | grep tapir-capture || docker volume create tapir-capture
+
+    return 0
+}
+
+function startTapir {
+    DOCKER_PROJECT=$1
+    DOCKER_REPO=$2
+
+   if [ ! -z $DOCKER_REPO ]; then
+        docker logout
+        docker login --username $DOCKER_PROJECT $DOCKER_REPO
+        DOCKER_REPO="$DOCKER_REPO/"
+   fi
+   if [ ! -z $DOCKER_PROJECT ]; then
+        docker run --rm --name tapir-storage -d -p 27017:27017 --net tapir -v tapir-data:/data/db $DOCKER_REPO$DOCKER_PROJECT/tapir-storage
+        docker run --rm --name tapir-cache -d -p 6389:6389 --net tapir $DOCKER_REPO$DOCKER_PROJECT/tapir-cache
+
+        docker run --rm --name tapir-twig -d -v tapir-logs:/var/log/tapir-twig -v tapir-configs:/etc/tapir-twig -p 8080:8080 --net tapir $DOCKER_REPO$DOCKER_PROJECT/tapir-twig
+        docker run --rm --name tapir-salto -d -v tapir-logs:/var/log/tapir-salto -v tapir-configs:/etc/tapir-salto -p 15060:15060/udp --net tapir $DOCKER_REPO$DOCKER_PROJECT/tapir-salto
+        docker run --rm --name tapir-captain -d -v tapir-logs:/var/log/tapir-captain -v tapir-configs:/etc/tapir-captain -v tapir-capture:/var/lib/tapir --net tapir $DOCKER_REPO$DOCKER_PROJECT/tapir-captain
+        docker run --rm --name tapir-hoof -d -v tapir-logs:/var/log/tapir-hoof -p 80:8080 --net tapir $DOCKER_REPO$DOCKER_PROJECT/tapir-hoof
+    else
+        docker run --rm --name tapir-storage -d -p 27017:27017 --net tapir -v tapir-data:/data/db tapir-storage
+        docker run --rm --name tapir-cache -d -p 6389:6389 --net tapir tapir-cache
+
+        docker run --rm --name tapir-twig -d -v tapir-logs:/var/log/tapir-twig -v tapir-configs:/etc/tapir-twig -p 8080:8080 --net tapir tapir-twig
+        docker run --rm --name tapir-salto -d -v tapir-logs:/var/log/tapir-salto -v tapir-configs:/etc/tapir-salto -p 15060:15060/udp --net tapir tapir-salto
+        docker run --rm --name tapir-captain -d -v tapir-logs:/var/log/tapir-captain -v tapir-configs:/etc/tapir-captain -v tapir-capture:/var/lib/tapir --net tapir tapir-captain
+        docker run --rm --name tapir-hoof -d -v tapir-logs:/var/log/tapir-hoof -p 80:8080 --net tapir tapir-hoof
+    fi
+
+    return 0
+}
+
+function main {
+    RETVAL=0
+    case "$1" in
+        pull)
+            # Add new instance
+            pullTapir $2 $3
+            ;;
+        init)
+            # Add new instance
+            initTapir
+            ;;
+        start)
+            # Delete instance
+            startTapir $2 $3
+            ;;
+        *)
+            echo
+            echo "Script for start Tapir Docker"
+            echo
+            echo "Usage: $0 {pull|init|start} LOGIN REPOSITORY"
+            echo "where "
+            echo "       pull  - download Tapir docker images form private repository"
+            echo "       init  - create network and volumes"
+            echo "       start - start all containers of Tapir"
+            echo ""
+            echo "       LOGIN      - Username of private repository"
+            echo "       REPOSITORY - Private repository"
+
+            RETVAL=1
+            ;;
+        esac
+
+        exit $RETVAL
+}
+
+main $1
