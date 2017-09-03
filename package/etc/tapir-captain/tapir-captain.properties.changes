@@ -1,4 +1,13 @@
 !!###################################################!!
+!!               Settings v.2.2.x                    !!
+!!###################################################!!
+CHANGE:
+disruptor.consumers = <number>
+        Count of consumers to process data from buffer.
+        Default is 1
+        It's actual for reading capture file.
+
+!!###################################################!!
 !!               Settings v.2.0.x                    !!
 !!###################################################!!
 pcap.device = <interface>

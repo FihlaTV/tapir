@@ -1,4 +1,13 @@
-!! FIXME: v.2.2.x mongo.batchSize -> disruptor.batchSize
+!!###################################################!!
+!!               Settings v.2.2.x                    !!
+!!###################################################!!
+ADD:
+disruptor.batchSize = <size>
+        Batch size of message records for processing.
+        Default value is 128
+
+REMOVE:
+mongo.batchSize
 
 !!###################################################!!
 !!               Settings v.2.0.x                    !!

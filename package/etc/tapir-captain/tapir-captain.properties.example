@@ -1,5 +1,5 @@
 #! Packet
-packet.host = 127.0.0.1
+packet.host = tapir-salto
 packet.port = 15060
 packet.delay = 0
 packet.ttl = 60000
@@ -11,5 +11,5 @@ pcap.spanLength = 65535
 pcap.timeoutMillis = 0
 
 #! Disruptor
-disruptor.capacity = 4096
-disruptor.consumers = 2
+disruptor.capacity = 32768
+disruptor.consumers = 1
