@@ -1,7 +1,6 @@
 FROM maven AS builder
 
-# TODO: change windsent to sip3io
-RUN git clone https://github.com/windsent/tapir.git
+RUN git clone https://github.com/sip3io/tapir.git
 WORKDIR /tapir
 
 RUN apt-get update && \
