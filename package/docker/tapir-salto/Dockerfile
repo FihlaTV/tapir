@@ -15,10 +15,10 @@ RUN mkdir -p /etc/tapir-salto
 RUN mkdir -p /opt/tapir-salto
 RUN mkdir -p /var/log/tapir-salto
 
-COPY --from=builder /test/salto/target/tapir-salto.jar /opt/tapir-salto
-COPY --from=builder /test/package/etc/tapir-salto/logback.xml.example /opt/tapir-salto/
-COPY --from=builder /test/package/etc/tapir-salto/tapir-salto.properties.example /opt/tapir-salto/
-COPY --from=builder /test/package/docker/tapir-salto/tapir-salto /opt/tapir-salto/
+COPY --from=builder /tapir/salto/target/tapir-salto.jar /opt/tapir-salto
+COPY --from=builder /tapir/package/etc/tapir-salto/logback.xml.example /opt/tapir-salto/
+COPY --from=builder /tapir/package/etc/tapir-salto/tapir-salto.properties.example /opt/tapir-salto/
+COPY --from=builder /tapir/package/docker/tapir-salto/tapir-salto /opt/tapir-salto/
 RUN chmod +x /opt/tapir-salto/tapir-salto
 
 EXPOSE 15060/udp
