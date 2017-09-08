@@ -35,11 +35,14 @@ public class MetricService {
 
     private final Partition partition;
 
+    private final int offset;
+
     private final Redis redis;
 
     @Autowired
-    public MetricService(@Value("${statistic.partition}") String partition, Redis redis) {
+    public MetricService(@Value("${statistic.partition}") String partition, @Value("${statistic.offset}") int offset, Redis redis) {
         this.partition = PartitionFactory.ofPattern(partition);
+        this.offset = offset;
         this.redis = redis;
     }
 
@@ -99,7 +102,7 @@ public class MetricService {
         long time = partition.truncate(System.currentTimeMillis());
         while (depth < MAX_DEPTH) {
             if (redis.hasKey(prefix, partition.define(time, false))) {
-                return time - partition.duration(); // previous from the last...
+                return time - offset * partition.duration(); // taking with offset...
             }
             time = time - partition.duration();
             depth++;
