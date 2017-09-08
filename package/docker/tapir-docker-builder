@@ -26,13 +26,12 @@ DOCKER_DIR=${PWD}
 MAIN_DIR=$DOCKER_DIR/../..
 PACKAGE_DIR=$MAIN_DIR/package
 DOCKER_PATH=""
+DOCKER_PROJECT=$2
+DOCKER_REPO=$3
 
 export PATH=$PATH:$DOCKER_PATH
 
 function makeTapir {
-   DOCKER_PROJECT=$1
-   DOCKER_REPO=$2
-
    # Check dependencies:
    echo "Checking Docker..."
    $(docker -v 2>&1 | grep version > /dev/null)
@@ -93,9 +92,6 @@ function makeTapir {
 }
 
 function pushTapir {
-   DOCKER_PROJECT=$1
-   DOCKER_REPO=$2
-
    if [ ! -z $DOCKER_REPO ]; then
       docker logout
       docker login --username $DOCKER_PROJECT $DOCKER_REPO
@@ -122,11 +118,11 @@ function main {
    case "$1" in
       make)
          # Make Tapir docker images
-         makeTapir $2 $3
+         makeTapir 
          ;;
       push)
          # Push Tapir docker images to repository
-         pushTapir $2 $3
+         pushTapir 
          ;;
       clean)
          # Clean temporary files
