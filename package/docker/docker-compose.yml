@@ -26,6 +26,9 @@ services:
          - "6389:6389"
    tapir-salto:
       image: sip3io/tapir-salto
+      depends_on:
+         - tapir-storage
+         - tapir-cache
       networks:
          tapir:
             aliases:
@@ -37,6 +40,9 @@ services:
          - tapir-configs:/etc/tapir-salto
    tapir-twig:
       image: sip3io/tapir-twig
+      depends_on:
+         - tapir-storage
+         - tapir-cache
       networks:
          tapir:
             aliases:
@@ -48,6 +54,8 @@ services:
          - tapir-configs:/etc/tapir-twig
    tapir-captain:
       image: sip3io/tapir-captain
+      depends_on:
+         - tapir-salto
       networks:
          tapir:
             aliases:
@@ -58,6 +66,8 @@ services:
          - /tmp:/var/lib/tapir
    tapir-hoof:
       image: sip3io/tapir-hoof
+      depends_on:
+         - tapir-twig
       networks:
          tapir:
             aliases:
