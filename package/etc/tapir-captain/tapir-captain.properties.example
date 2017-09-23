@@ -5,7 +5,8 @@ packet.delay = 0
 packet.ttl = 60000
 
 #! Pcap
-pcap.device = lo
+pcap.directory = /var/lib/tapir
+#pcap.device = lo
 pcap.bpfFilter = tcp or udp
 pcap.spanLength = 65535
 pcap.timeoutMillis = 0

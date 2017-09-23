@@ -1,0 +1,68 @@
+version: '3'
+networks:
+   tapir:
+volumes:
+   tapir-logs:
+   tapir-configs:
+   tapir-data:
+services:
+   tapir-storage:
+      image: sip3io/tapir-storage
+      networks:
+         tapir:
+            aliases:
+               - tapir-storage
+      ports:
+         - "27017:27017"
+      volumes:
+         - tapir-data:/data/db
+   tapir-cache:
+      image: sip3io/tapir-cache
+      networks:
+         tapir:
+            aliases:
+               - tapir-cache
+      ports:
+         - "6389:6389"
+   tapir-salto:
+      image: sip3io/tapir-salto
+      networks:
+         tapir:
+            aliases:
+               - tapir-salto
+      ports:
+         - "15060:15060/udp"
+      volumes:
+         - tapir-logs:/var/log/tapir-salto
+         - tapir-configs:/etc/tapir-salto
+   tapir-twig:
+      image: sip3io/tapir-twig
+      networks:
+         tapir:
+            aliases:
+               - tapir-twig
+      ports:
+         - "8080:8080"
+      volumes:
+         - tapir-logs:/var/log/tapir-twig
+         - tapir-configs:/etc/tapir-twig
+   tapir-captain:
+      image: sip3io/tapir-captain
+      networks:
+         tapir:
+            aliases:
+               - tapir-captain
+      volumes:
+         - tapir-logs:/var/log/tapir-captain
+         - tapir-configs:/etc/tapir-captain
+         - /tmp:/var/lib/tapir
+   tapir-hoof:
+      image: sip3io/tapir-hoof
+      networks:
+         tapir:
+            aliases:
+               - tapir-hoof
+      ports:
+         - "80:8080"
+      volumes:
+         - tapir-logs:/var/log/tapir-hoof

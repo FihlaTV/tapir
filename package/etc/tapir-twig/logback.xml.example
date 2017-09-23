@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="DEFAULT">
-        <file>/var/log/tapir-twig/default.log</file>
+        <file>/var/log/tapir-twig/tapir-twig.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>/var/log/tapir-twig/%d{yyyy-MM-dd}.default.log</fileNamePattern>
+            <fileNamePattern>/var/log/tapir-twig/%d{yyyy-MM-dd}.tapir-twig.log</fileNamePattern>
             <!-- keep 15 days' worth of history -->
             <maxHistory>15</maxHistory>
         </rollingPolicy>
