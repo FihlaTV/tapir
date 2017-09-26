@@ -50,22 +50,28 @@ At the moment we've described build and installation process only for Linux user
 The Docker installation procedure works well for both sip3io/tapir and sip3io/tapir-hoof. 
 
 1. Pull form github 
-	# cd ~
-	# git clone https://github.com/sip3io/tapir.git
-	# cd ./tapir/package/docker
-	# docker-compose up -d
+	
+	cd ~
+	git clone https://github.com/sip3io/tapir.git
+	cd ./tapir/package/docker
+	docker-compose up -d
 
 2. Open web browser and go to http://dockerhostname
 
 3. For process tcpdump, you can put pcap files to /tmp directory in docker host.
+	
 	e.g. # tcpdump -i any -s 0 -nnn -w /tmp/tapir_capture-file_ -C 50 -W 20 "port 5060"
 
 4. Directory of configs:
-	# docker volume inspect docker_tapir-configs | grep "Mountpoint"| tr -d \",: | awk '{print $2}' 
+	
+	docker volume inspect docker_tapir-configs | grep "Mountpoint"| tr -d \",: | awk '{print $2}' 
+	
 	e.g.: /var/lib/docker/volumes/docker_tapir-configs/_data
 
 5. Directory of logs:
-	# docker volume inspect docker_tapir-logs | grep "Mountpoint" | tr -d \",: | awk '{print $2}' 
+	
+	docker volume inspect docker_tapir-logs | grep "Mountpoint" | tr -d \",: | awk '{print $2}' 
+	
 	e.g.: /var/lib/docker/volumes/docker_tapir-logs/_data
 
 
