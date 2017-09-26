@@ -45,6 +45,30 @@ To deploy **Tapir** modules, follow build and installation instructions: [Captai
 
 At the moment we've described build and installation process only for Linux users. Let us know if you want to deploy Tapir on OS Windows.
 
+#### Docker friendly ####
+
+The Docker installation procedure works well for both sip3io/tapir and sip3io/tapir-hoof. 
+
+1. Pull form github 
+	# cd ~
+	# git clone https://github.com/sip3io/tapir.git
+	# cd ./tapir/package/docker
+	# docker-compose up -d
+
+2. Open web browser and go to http://dockerhostname
+
+3. For process tcpdump, you can put pcap files to /tmp directory in docker host.
+	e.g. # tcpdump -i any -s 0 -nnn -w /tmp/tapir_capture-file_ -C 50 -W 20 "port 5060"
+
+4. Directory of configs:
+	# docker volume inspect docker_tapir-configs | grep "Mountpoint"| tr -d \",: | awk '{print $2}' 
+	e.g.: /var/lib/docker/volumes/docker_tapir-configs/_data
+
+5. Directory of logs:
+	# docker volume inspect docker_tapir-logs | grep "Mountpoint" | tr -d \",: | awk '{print $2}' 
+	e.g.: /var/lib/docker/volumes/docker_tapir-logs/_data
+
+
 ### Versions ###
 
 **Tapir** is distributed in two different versions: Community and Enterprise. Summary comparison table is given below.
@@ -63,6 +87,25 @@ At the moment we've described build and installation process only for Linux user
 | Extended search            | No        | Yes        |
 | Technical assistance       | No        | Yes        |
 | Quality dashboards         | Limited   | Full       |
+
+**SIP KPI** table of Community and Enterprise metrics is shown below. 
+
+| Metric                                     | Community | Enterprise |
+|--------------------------------------------|-----------|------------|
+| MPS - messages per second                  | Yes       | Yes        |
+| TPS - transactions per second              | Yes       | Yes        |
+| CPS - calls per second                     | Yes       | Yes        |
+| RPS - registers per second                 | Yes       | Yes        |
+| RPS - registers per second                 | Yes       | Yes        |
+| 4XX - error responses with 4xx statuses    | Yes       | Yes        |
+| 5XX - error responses with 5xx statuses    | Yes       | Yes        |
+| 6XX - error responses with 6xx statuses    | Yes       | Yes        |
+| ASR - answer seizure ratio                 | Yes       | Yes        |
+| ACD - average call duration                | No        | Yes        |
+| ACST - average call setup time             | No        | Yes        |
+| ACDT - average call disconnection time     | No        | Yes        |
+| RRD - registration request delay           | No        | Yes        |
+
 
 ### License & Contributing ###
 
